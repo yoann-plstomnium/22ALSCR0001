@@ -9,11 +9,10 @@ import datetime
 import matplotlib.pyplot as plt
 
 
-directory = os.path.dirname(os.path.abspath(__file__)) + "\raw data"
-path = "C:/Users/yoann.skoczek/PycharmProjects/PODF_Example/raw data/"
+directory = os.path.dirname(os.path.abspath(__file__)) + "\0-raw data"
+path = "C:/Users/yoann.skoczek/PycharmProjects/PODF_Example/0-raw data/"
 files = glob.glob(os.path.join(path,"*.txt"))
 for file_name in files:
-    #print(os.path.basename(file_name).find("_"))
     var_date = os.path.basename(file_name)[os.path.basename(file_name).find("____") + 4:]
     var_date = datetime.datetime(int("20"+var_date[0:2]),int(var_date[2:4]),int(var_date[4:6]),int(var_date[6:8]),int(var_date[8:10]))
     output = pd.read_csv(file_name, sep="\t", decimal=",")
@@ -38,11 +37,19 @@ for file_name in files:
             output.at[new_itr, 'Volume'] = float(select_row['Volume']) - offset
             output.at[new_itr, 'Duree'] = float(select_row['Duree']) - offset2
 
-        if float(select_row['Resistance']) > 350:
-            output.at[new_itr, 'Niveau'] = "Reservoir vide"
-        elif float(select_row['Resistance']) < 50:
-            output.at[new_itr, 'Niveau'] = "Reservoir plein"
+        if new_itr == 0:
+            output.at[new_itr, 'Niveau'] = "Jaugeage"
+            vol_lastitr = float(select_row['Volume'])
+            niv_lastitr = "Jaugeage"
         else:
-            output.at[new_itr, 'Niveau'] = "En cours de remplissage"
+            if float(select_row['Volume']) > vol_lastitr:
+                output.at[new_itr, 'Niveau'] = "Jaugeage"
+                niv_lastitr = "Jaugeage"
+            elif float(select_row['Volume']) < vol_lastitr:
+                output.at[new_itr, 'Niveau'] = "Dejaugeage"
+                niv_lastitr = "Dejaugeage"
+            else:
+                output.at[new_itr, 'Niveau'] = niv_lastitr
+            vol_lastitr = float(select_row['Volume'])
 
     output.to_csv(file_name.replace(".txt","_consolidated.csv"),"\t", decimal=",")
