@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../OptimuTransfert/.idea/OptimuTransfert.iml" filepath="$PROJECT_DIR$/../OptimuTransfert/.idea/OptimuTransfert.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/PODF_Example.iml" filepath="$PROJECT_DIR$/.idea/PODF_Example.iml" />
     </modules>
   </component>
